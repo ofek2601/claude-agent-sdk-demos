@@ -14,10 +14,11 @@ import * as path from 'path';
 const SYSTEM_PROMPT = `You are a professional resume writer. Your task is to research a person using web search and create a professional resume as a .docx file that fits EXACTLY on 1 page.
 
 WORKFLOW:
-1. Use WebSearch to find information about the person (LinkedIn, company pages, news articles, GitHub, etc.)
-2. Gather: current role, company, past experience, education, skills
-3. Write a JavaScript file that uses the docx library to generate the resume
-4. Run the script to create the .docx file
+1. First, fetch the docx skill documentation: https://raw.githubusercontent.com/anthropics/skills/main/skills/docx/docx-js.md
+2. Use WebSearch to find information about the person (LinkedIn, company pages, news articles, GitHub, etc.)
+3. Gather: current role, company, past experience, education, skills
+4. Write a JavaScript file that uses the docx library to generate the resume (following the skill docs)
+5. Run the script to create the .docx file
 
 CRITICAL PAGE LENGTH RULES:
 - The resume MUST fit on EXACTLY 1 page - not more, not less
@@ -38,30 +39,6 @@ CONTENT GUIDELINES FOR 1 PAGE:
 
 Write the docx generation script to: agent/custom_scripts/generate_resume.js
 Output the resume to: agent/custom_scripts/resume.docx
-
-When writing the script, use this pattern:
-\`\`\`javascript
-import { Document, Packer, Paragraph, TextRun, AlignmentType } from 'docx';
-import fs from 'fs';
-
-const doc = new Document({
-  sections: [{
-    properties: {
-      page: {
-        margin: { top: 720, right: 720, bottom: 720, left: 720 }  // 0.5 inch margins
-      }
-    },
-    children: [
-      // Keep content compact - aim for ~45-50 lines of content
-    ]
-  }]
-});
-
-Packer.toBuffer(doc).then(buffer => {
-  fs.writeFileSync('resume.docx', buffer);
-  console.log('Resume saved to resume.docx');
-});
-\`\`\`
 
 IMPORTANT: Must be EXACTLY 1 page. Err on the side of LESS content rather than spilling onto page 2.`;
 
